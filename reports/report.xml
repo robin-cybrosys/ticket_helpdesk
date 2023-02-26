@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ticket_pivot" model="ir.ui.view">
+         <field name="name">ticket.report.pivot</field>
+         <field name="model">ticket.report</field>
+         <field name="arch" type="xml">
+             <pivot string="Ticket Analysis" sample="1">
+                 <field name="team_id" type="col"/>
+                 <field name="create_date" interval="month" type="row"/>
+<!--                 <field name="cost" type="measure"/>-->
+<!--                 <field name="customer_id" string='Customer' type="measure"/>-->
+<!--                <field name="stage_id"  string='Stage' type="measure"/>-->
+<!--                <field name="project_id" string='Project' type="measure"/>-->
+             </pivot>
+         </field>
+    </record>
+
+    <record id="view_ticket_graph" model="ir.ui.view">
+         <field name="name">ticket.report.graph</field>
+         <field name="model">ticket.report</field>
+         <field name="arch" type="xml">
+             <graph string="Sales Analysis" type="line" sample="1">
+                 <field name="create_date" interval="day"/>
+                 <field name="cost" type="measure"/>
+                 <field name="customer_id" type="measure"/>
+                <field name="stage_id" type="measure"/>
+                <field name="project_id" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="ticket_report_view_tree" model="ir.ui.view">
+        <field name="name">ticket.report.view.tree</field>
+        <field name="model">ticket.report</field>
+        <field name="arch" type="xml">
+            <tree string="Ticket Analysis">
+                <field name="create_date" widget="date"/>
+                <field name="customer_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="team_id" optional="show"/>
+                <field name="stage_id"/>
+                <field name="project_id"/>
+                <field name="cost" optional="show" sum="Sum of Total"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <record id="action_ticket_report_all" model="ir.actions.act_window">
+        <field name="name">Ticket Analysis</field>
+        <field name="res_model">ticket.report</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="view_id"></field>  <!-- force empty -->
+    </record>
+
+
+    <menuitem id="ticket_report_menu_root"
+            name="Reports"
+            parent="website_ticket_helpdesk.menu_helpdesk"
+            sequence="2"/>
+
+        <menuitem id="ticket_report_menu"
+            name="Ticket Analysis"
+            parent="website_ticket_helpdesk.ticket_report_menu_root"
+            action="action_ticket_report_all"
+            sequence="3"/>
+</odoo>

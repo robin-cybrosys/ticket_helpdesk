@@ -1,0 +1,164 @@
+<odoo>
+
+
+
+    <template id="report_help_ticket">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="web.external_layout">
+                <t t-set="address">
+                    <address t-field="o.customer_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                </t>
+                <div class="page">
+                    <h3 class="text-center"><t t-esc="o.name"/>-<t t-esc="o.subject"/></h3>
+
+
+                    <div style="margin-bottom: 10px;">
+
+
+
+
+                    <div class="row mt32 mb32">
+
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.team_id" >
+                            <strong>Team:</strong>
+                            <p class="m-0" t-field="o.team_id.name"/>
+                        </div>
+
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.project_id" >
+                            <strong>Project:</strong>
+                            <p class="m-0" t-field="o.project_id.name"/>
+                        </div>
+
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.service_product_id" >
+                            <strong>Service Product:</strong>
+                            <p class="m-0" t-field="o.service_product_id.name"/>
+                        </div>
+
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.cost > 0" >
+                            <strong>Service cost per Hour:</strong>
+                            <p class="m-0" t-field="o.cost"/>
+                        </div>
+
+
+
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.priority in ['0', '1', '2', '3', '4']" >
+
+
+
+                        <t t-if="o.priority=='0'">
+                             <div>
+                                <strong>Prority :</strong>
+                            </div>
+                            <span>Very Low</span>
+
+                        </t>
+                        <t t-if="o.priority=='1'">
+                             <div>
+                                <strong>Prority :</strong>
+                            </div>
+                            <span>Low</span>
+
+                        </t>
+                        <t t-if="o.priority=='2'">
+                             <div>
+                                <strong>Prority :</strong>
+                            </div>
+                            <span>Normal</span>
+
+                        </t>
+                        <t t-if="o.priority=='3'">
+                             <div>
+                                <strong>Prority :</strong>
+                            </div>
+                            <span>High</span>
+
+                        </t>
+                        <t t-if="o.priority=='4'">
+                             <div>
+                                <strong>Prority :</strong>
+                            </div>
+                            <span>Very High</span>
+
+                        </t>
+                        </div>
+
+
+
+
+
+
+
+
+
+                    </div>
+
+                    <div>
+                        <strong>Desription :</strong>
+                    </div>
+                    <span t-field="o.description"/>
+
+                    </div>
+
+                    <t t-set="tasks" t-value="request.env['project.task'].search([('ticket_id', '=', o.id)])"/>
+
+                            <t t-if="tasks">
+                                <div>
+                                    <h3 class="text-center"><strong>Tasks</strong></h3>
+                                </div>
+
+
+                                <table class="table table-bordered mt32">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center"><span>Task Name</span></th>
+                                        <th class="text-center"><span>Analytic Account</span></th>
+                                        <th class="text-center"><span>Assigned to</span></th>
+                                        <th class="text-center"><span>Total Hours Spend</span></th>
+
+                                    </tr>
+                                </thead>
+
+                            <t  t-foreach="tasks" t-as="task">
+                                <tbody>
+                                    <tr class="text-center">
+                                        <td><span t-field="task.name"/></td>
+                                        <td><span t-field="task.analytic_account_id"/></td>
+                                        <td><span t-esc="', '.join(map(lambda x: (x.name), task.user_ids))"/></td>
+                                        <td><span t-field="task.effective_hours"/></td>
+
+                                    </tr>
+                                </tbody>
+                            </t>
+                            </table>
+                            </t>
+
+
+
+
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+
+
+
+
+        <record id="report_help_ticket" model="ir.actions.report">
+            <field name="name">Support Ticket</field>
+            <field name="model">help.ticket</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">website_ticket_helpdesk.report_help_ticket</field>
+            <field name="report_file">website_ticket_helpdesk.report_help_ticket</field>
+            <field name="binding_model_id" ref="model_help_ticket"/>
+            <field name="binding_type">report</field>
+        </record>
+
+
+
+
+
+
+</odoo>

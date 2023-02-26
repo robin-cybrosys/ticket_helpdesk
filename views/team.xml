@@ -1,0 +1,145 @@
+<odoo>
+
+<record id="view_helpdesk_team_form" model="ir.ui.view">
+            <field name="name">help.team.form</field>
+            <field name="model">help.team</field>
+            <field name="arch" type="xml">
+                <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+
+
+                        </div>
+                    <group>
+                       <field name="member_ids" widget="many2many_tags"/>
+                        <field name="email"/>
+                        <field name="project_id"/>
+
+                    </group>
+
+                    <h1>Tasks</h1>
+                     <div class="row mt16 o_settings_container" id="create_task">
+                     <div class="col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="create_task"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="create_task"/>
+                                <div class="text-muted">
+                                    Enable to create tasks from tickets
+                                </div>
+
+                            </div>
+                        </div>
+                 </div>
+
+                </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="view_helpdesk_team_tree" model="ir.ui.view">
+            <field name="name">help.team.tree</field>
+            <field name="model">help.team</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                     <field name="email"/>
+                        <field name="project_id"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="action_helpdesk_team" model="ir.actions.act_window">
+            <field name="name">Helpdesk</field>
+            <field name="res_model">help.team</field>
+            <field name="view_mode">tree,form</field>
+
+        </record>
+
+    <menuitem
+            id="menu_helpdesk_configuration"
+            name="Configuration"
+            sequence="750"
+            parent="menu_helpdesk"
+    />
+
+    <menuitem
+            id="menu_helpdesk_team"
+            name="Helpdesk Team"
+            action="action_helpdesk_team"
+            parent="menu_helpdesk_configuration"
+            />
+
+
+
+
+
+
+    <record id="view_helpdesk_stage_form" model="ir.ui.view">
+            <field name="name">ticket.stage.form</field>
+            <field name="model">ticket.stage</field>
+            <field name="arch" type="xml">
+                <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+
+
+                        </div>
+                    <group>
+                     <field name="sequence"/>
+                        <field name="closing_stage"/>
+
+                    </group>
+
+                </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="view_helpdesk_stage_tree" model="ir.ui.view">
+            <field name="name">ticket.stage.tree</field>
+            <field name="model">ticket.stage</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                     <field name="sequence"/>
+                        <field name="closing_stage"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="action_helpdesk_stage" model="ir.actions.act_window">
+            <field name="name">Stages</field>
+            <field name="res_model">ticket.stage</field>
+            <field name="view_mode">tree,form</field>
+
+        </record>
+
+    <menuitem
+            id="menu_helpdesk_stage"
+            name="Stages"
+            action="action_helpdesk_stage"
+            parent="menu_helpdesk_configuration"
+            />
+
+
+
+
+
+
+
+
+</odoo>

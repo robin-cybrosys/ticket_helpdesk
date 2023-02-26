@@ -1,0 +1,240 @@
+<odoo>
+
+    <template id="portal_my_home_menu_helpdesk_ticket" name="Portal layout : tickets menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+
+            <li t-if="tickets" t-attf-class="breadcrumb-item active">
+                <a t-if="tickets" t-attf-href="/my_tickets?{{ keep_query() }}">My Tickets</a>
+                <t t-else="">My Ticketes</t>
+            </li>
+            <li t-if="tickets" class="breadcrumb-item active">
+<!--                <span t-field="sale_order.type_name"/>-->
+                <t t-esc="tickets.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="helpdesk_ticket_portal" name="Tickets" inherit_id="portal.portal_my_home" priority="80" customize_show="True">
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+                <t  t-call="portal.portal_docs_entry">
+                    <t t-set="title">Tickets</t>
+                    <t t-set="url" t-value="'/my_tickets'"/>
+                    <t t-set="placeholder_count" t-value="'ticket_count'"/>
+                </t>
+            </xpath>
+        </template>
+
+
+    <template id="portal_my_tickets" name="My Tickets">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Tickets</t>
+            </t>
+            <t t-if="not orders">
+                <p>There are currently no tickets for your account.</p>
+            </t>
+            <t t-if="orders" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>
+                            <span class='d-none d-md-inline'>Ticket #</span>
+<!--                            <span class='d-block d-md-none'>Ref.</span>-->
+                        </th>
+                        <th class="text-right">Subject</th>
+                        <th class="text-right">Priority</th>
+<!--                        <th class="text-center"/>-->
+                        <th class="text-right">Date</th>
+                        <th class="text-right">Stage</th>
+                    </tr>
+                </thead>
+                <t t-foreach="orders" t-as="order">
+                    <tr>
+                        <td><a t-attf-href="/my_ticket/#{order.id}"><t t-esc="order.name"/></a></td>
+                         <td class="text-right"><span t-field="order.subject"/></td>
+                        <td class="text-right"><span t-field="order.priority"/></td>
+                        <td class="text-right">
+                            <span t-field="order.create_date" t-options="{'widget': 'date'}"/>&amp;nbsp;
+                            <span class='d-none d-md-inline' t-field="order.create_date" t-options="{'time_only': True}"/>
+                        </td>
+
+                        <td class="text-right"><span t-field="order.stage_id.name"/></td>
+
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+
+
+
+
+
+    <template id="ticket_portal_template" name="Helpdesk Portal Template" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+
+
+            <div class="row mt16 o_portal_sale_sidebar">
+
+                <!-- Page content -->
+                <div id="ticket_content" class="col-12 col-lg justify-content-end">
+
+                    <!-- main content -->
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_sale_content">
+                        <div t-call="website_ticket_helpdesk.help_ticket_portal_content"/>
+                    </div>
+
+                    <!-- bottom actions -->
+                    <div class="row justify-content-center text-center d-print-none pt-1 pb-4">
+                    </div>
+
+                    <!-- chatter -->
+                    <div id="halpdesk_ticket_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="tickets"/>
+                        </t>
+                    </div>
+                </div><!-- // #quote_content -->
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="help_ticket_portal_content" name="Helpdesk Portal Content">
+        <!-- Intro -->
+
+
+        <div style="margin-right: 10px; margin-left: 10px;margin-top: 10px;">
+                    <div class="row no-gutters">
+                        <div class="col-12">
+                            <h5 class="d-flex mb-1 mb-md-0 row">
+                                <div class="col-6">
+                                    <strong>Name: </strong>
+                                    <t t-esc="tickets.name"/>
+<!--                                    <t t-call="project.portal_my_tasks_priority_widget_template"/>-->
+<!--                                    <span t-field="task.name" class="text-truncate"/>-->
+<!--                                    <small class="text-muted d-none d-md-inline"> (#<span t-field="task.id"/>)</small>-->
+                                </div>
+                                <div class="col-3 text-right">
+                                    <small class="text-right">Stage:</small>
+                                    <span t-field="tickets.stage_id.name" class=" badge badge-pill badge-info" title="Current stage of this Ticket"/>
+                                </div>
+                            </h5>
+                        </div>
+                        <div style="text-align: center;">
+<!--                        <h2 style="text-align: center;">-->
+<!--                            <span>Subject: </span>-->
+<!--                             <t t-esc="tickets.subject"/>-->
+<!--                        </h2>-->
+
+                        </div>
+                    </div>
+
+
+             <div style="width:100%;">
+                 <div style="margin-left: 19%;">
+                                    <h2>
+                                        <span>Subject: </span>
+                                         <t t-esc="tickets.subject"/>
+                                    </h2>
+
+                        </div>
+            <!-- Informations -->
+            <div id="" style="width:100%;">
+
+
+                <div class="row" style="width:100%;">
+                    <div class="mb-3 col-6">
+                        <strong>Ticket Date:</strong>
+
+                      <span t-field="tickets.create_date" t-options='{"widget": "date"}'/>
+                    </div>
+
+
+                    <div class="mb-3 col-6" t-if="tickets.project_id">
+                        <strong>Project</strong>
+
+                      <span t-field="tickets.project_id.name"/>
+                    </div>
+
+                    <div class="mb-3 col-6" t-if="tickets.team_id">
+                        <strong>Team</strong>
+
+                      <span t-field="tickets.team_id.name"/>
+                    </div>
+
+                    <div class="mb-3 col-6" t-if="tickets.cost > 0">
+                        <strong>Cost Per Hour</strong>
+
+                      <span t-field="tickets.cost"/>
+                    </div>
+                    <div class="col-3 text-right" t-if="tickets.priority in ['0', '1', '2', '3', '4']">
+
+                      <t t-if="tickets.priority=='0'">
+                             <div class="mb-3 col-6 row">
+                                <strong>Prority :</strong>
+                                 <span>Very Low</span>
+                            </div>
+
+
+                        </t>
+                        <t t-if="tickets.priority=='1'">
+                             <div class="mb-3 col-6 row">
+                                <strong>Prority :</strong>
+                                  <span>Low</span>
+                            </div>
+
+
+                        </t>
+                        <t t-if="tickets.priority=='2'">
+                             <div class="mb-3 col-6 row">
+                                <strong>Prority :</strong>
+                                 <span>Normal</span>
+                            </div>
+
+
+                        </t>
+                        <t t-if="tickets.priority=='3'">
+                             <div class="mb-3 col-6 row">
+                                <strong>Prority :</strong>
+                                  <span>High</span>
+                            </div>
+
+
+                        </t>
+                        <t t-if="tickets.priority=='4'">
+                             <div class="mb-3 col-6 row">
+                                <strong>Prority :</strong>
+                                 <span>Very High</span>
+                            </div>
+
+
+                        </t>
+                    </div>
+                </div>
+                <div>
+
+                        <strong>Description:</strong>
+
+                    <div style="width:100%">
+                        <span t-field="tickets.description"/>
+                    </div>
+
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+        </div>
+
+
+    </template>
+
+</odoo>
